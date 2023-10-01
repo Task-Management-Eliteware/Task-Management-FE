@@ -42,9 +42,10 @@ const api = createApi({
       }),
       update: builder.mutation<TReturn, TUpdate>({
         invalidatesTags: tasks,
-        query: (taskId) => ({
+        query: (task) => ({
           method: 'put',
-          url: `${baseEndPoint}/${taskId}`,
+          url: `${baseEndPoint}/${task._id}`,
+          body: task,
         }),
       }),
     };

@@ -3,29 +3,26 @@ import { string } from 'yup';
 import { TLoginReturn } from 'shared/models';
 import { localStorageGetItem } from 'shared/utils';
 
-// const initialState: AuthType = {
-//   accessToken: JSON.parse(localStorage.getItem('user') || '{"accessToken":null,"user":null}').accessToken,
-//   user: JSON.parse(localStorage.getItem('user') || '{"accessToken":null,"user":null}').user,
-// };
-const token = localStorageGetItem('token');
-console.log('token', token);
-const initialState: TLoginReturn = {
-  token: '',
+type TAuth = {
+  token: string | null;
+};
+
+const initialState: TAuth = {
+  token: localStorageGetItem('token'),
 };
 
 export const slice = createSlice({
   name: 'authSlice',
   initialState,
   reducers: {
-    logout: (state, action: PayloadAction<TLoginReturn>) => {
-      state.token = '';
+    logout: (state) => {
+      state.token = null;
     },
-    setToken: (state, action: PayloadAction<TLoginReturn>) => {
+    setToken: (state, action: PayloadAction<TAuth>) => {
       state.token = action.payload.token;
-      // state.user = action.payload.user;
     },
   },
 });
 
 export const { logout, setToken } = slice.actions;
-export default slice;
+export const authSlice = slice;

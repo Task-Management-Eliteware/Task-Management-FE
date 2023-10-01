@@ -12,3 +12,8 @@ export const localStorageGetItem = (key: string) => {
   const value = localStorage.getItem(key);
   return value;
 };
+
+export const localStorageRemoveItem = (key: string) => {
+  const value = localStorage.removeItem(key);
+  return value;
+};

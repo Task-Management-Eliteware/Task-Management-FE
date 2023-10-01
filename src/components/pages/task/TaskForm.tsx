@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { FC, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,9 +20,19 @@ const TaskForm: FC<TTaskFormProps> = (props) => {
     resolver: yupResolver(taskSchema),
   });
 
-  const Form = useMemo(() => customForm(formMethods), []);
+  const Form = useMemo(() => customForm(formMethods), [task]);
 
   const onSubmit: SubmitHandler<TTaskUpsert> = (data) => {
+    if (task) {
+      updateTask({ ...data, _id: task._id })
+        .unwrap()
+        .then((res) => {
+          formMethods.reset({ taskTitle: '', taskCategory: '' });
+        })
+        .catch((err) => console.log(err));
+      return;
+    }
+
     createTask(data)
       .unwrap()
       .then((res) => {
