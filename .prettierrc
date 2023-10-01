@@ -1,0 +1,17 @@
+{
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "jsxSingleQuote": false,
+  "importOrder": [
+    "^react(.*)",
+    "<THIRD_PARTY_MODULES>",
+    "^dayjs",
+    "^nanoid",
+    "^components/(.*)$",
+    "^shared/(.*)$",
+    "^[,./]"
+  ],
+  "endOfLine": "auto"
+}
