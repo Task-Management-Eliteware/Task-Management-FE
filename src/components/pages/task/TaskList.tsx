@@ -1,11 +1,15 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
-import { useDeleteTask, useGetTasksList, useUpdateTask } from 'shared';
+import React, { FC } from 'react';
+import { TUpdate, useDeleteTask, useGetTasksList, useUpdateTask } from 'shared';
 
-const TaskList = () => {
+type TTaskListProps = {
+  onSetUpdateValue: (value: TUpdate) => void;
+};
+
+const TaskList: FC<TTaskListProps> = (props) => {
+  const { onSetUpdateValue } = props;
   const { data } = useGetTasksList();
   const [deleteTask] = useDeleteTask();
-  const [updateTask] = useUpdateTask();
 
   const handleDeleteTask = (taskId: string) => {
     deleteTask(taskId)
@@ -14,11 +18,8 @@ const TaskList = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleUpdateTask = (taskId: string) => {
-    deleteTask(taskId)
-      .unwrap()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+  const handleUpdateTask = (task: TUpdate) => {
+    onSetUpdateValue(task);
   };
 
   return (
@@ -32,7 +33,7 @@ const TaskList = () => {
                 <button className="btn btn-warning btn-sm mx-2" onClick={() => handleDeleteTask(el._id)}>
                   delete
                 </button>
-                <button className="btn btn-warning btn-sm mx-2" onClick={() => handleDeleteTask(el._id)}>
+                <button className="btn btn-warning btn-sm mx-2" onClick={() => handleUpdateTask(el)}>
                   Update
                 </button>
               </div>

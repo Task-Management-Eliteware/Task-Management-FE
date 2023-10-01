@@ -1,15 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TTaskUpsert, taskSchema, useCreateTask, useUpdateTask } from 'shared';
+import { TTaskUpsert, TUpdate, taskSchema, useCreateTask, useUpdateTask } from 'shared';
 import { customForm } from 'components/common';
 
-const TaskForm = () => {
+type TTaskFormProps = {
+  task: TUpdate | undefined;
+};
+
+const TaskForm: FC<TTaskFormProps> = (props) => {
+  const { task } = props;
   const [createTask] = useCreateTask();
   const [updateTask] = useUpdateTask();
 
   const formMethods = useForm<TTaskUpsert>({
     mode: 'all',
+    values: task,
     resolver: yupResolver(taskSchema),
   });
 

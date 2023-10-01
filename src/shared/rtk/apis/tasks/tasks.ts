@@ -3,7 +3,7 @@ import { TApiListReturn, TApiReturn, TTask, TTaskUpsert } from 'shared/models';
 import { baseApiQuery } from '../interceptor';
 
 type TBody = TTaskUpsert;
-type TUpdate = TTaskUpsert & { _id: string };
+export type TUpdate = TTaskUpsert & { _id: string };
 type TListReturn = TApiListReturn<TTask>;
 type TReturn = TApiReturn<TTask>;
 
