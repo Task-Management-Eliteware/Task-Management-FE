@@ -1,3 +1,1 @@
-const a = 's';
-
-export default a;
+export * from './auth';

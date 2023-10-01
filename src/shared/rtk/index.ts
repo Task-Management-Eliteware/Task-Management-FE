@@ -1,12 +1,16 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import { authApi, tasksApi } from './apis';
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    [authApi.reducerPath]: authApi.reducer,
+    [tasksApi.reducerPath]: tasksApi.reducer,
+  },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat();
+    return getDefaultMiddleware().concat([authApi.middleware, tasksApi.middleware]);
   },
 });
 
