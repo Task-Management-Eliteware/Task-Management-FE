@@ -1,7 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { authApi, tasksApi } from './apis';
+import { authApi, tasksApi, categoriesApi } from './apis';
 import { authSlice } from './slices';
 
 export const store = configureStore({
@@ -9,10 +9,11 @@ export const store = configureStore({
     [authSlice.name]: authSlice.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [tasksApi.reducerPath]: tasksApi.reducer,
+    [categoriesApi.reducerPath]: categoriesApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat([authApi.middleware, tasksApi.middleware]);
+    return getDefaultMiddleware().concat([authApi.middleware, tasksApi.middleware, categoriesApi.middleware]);
   },
 });
 

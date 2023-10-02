@@ -1,14 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { TApiListReturn, TApiReturn, TTask, TTaskUpsert, TTaskList } from 'shared/models';
+import { TApiListReturn, TApiReturn, TCategories, TCategoryUpsert } from 'shared/models';
 import { baseApiQuery } from '../interceptor';
 
-export type TUpdate = TTaskUpsert;
-type TListReturn = TApiListReturn<TTaskList>;
-type TReturn = TApiReturn<TTask>;
+type TBody = TCategoryUpsert;
+export type TUpdateCategory = TCategoryUpsert & { _id: string };
+export type TListReturn = TApiListReturn<TCategories>;
+type TReturn = TApiReturn<TCategories>;
 
-const apiReducerPath = 'tasks';
-const baseEndPoint = '/tasks';
-const tasks = ['Tasks'];
+const apiReducerPath = 'categories';
+const baseEndPoint = '/categories';
+const tasks = ['Categories'];
 
 const api = createApi({
   reducerPath: apiReducerPath,
@@ -16,17 +17,15 @@ const api = createApi({
   tagTypes: tasks,
   endpoints: (builder) => {
     return {
-      list: builder.query<TListReturn, Record<string, any>>({
+      get: builder.query<TListReturn, void>({
         providesTags: ['Tasks'],
         query: (body) => ({
           method: 'get',
           url: baseEndPoint,
-          params: {
-            taskCategoryIds: body.taskCategoryIds,
-          },
+          body,
         }),
       }),
-      post: builder.mutation<TReturn, TUpdate>({
+      post: builder.mutation<TReturn, TBody>({
         invalidatesTags: tasks,
         query: (body) => ({
           method: 'post',
@@ -41,7 +40,7 @@ const api = createApi({
           url: `${baseEndPoint}/${taskId}`,
         }),
       }),
-      update: builder.mutation<TReturn, TUpdate>({
+      update: builder.mutation<TReturn, TBody>({
         invalidatesTags: tasks,
         query: (task) => ({
           method: 'put',
@@ -54,10 +53,10 @@ const api = createApi({
 });
 
 export const {
-  useListQuery: useGetTasksList,
-  usePostMutation: useCreateTask,
-  useDeleteMutation: useDeleteTask,
-  useUpdateMutation: useUpdateTask,
+  useGetQuery: useGetCategoriesList,
+  usePostMutation: useCreateCategories,
+  useDeleteMutation: useDeleteCategories,
+  useUpdateMutation: useUpdateCategories,
 } = api;
 
-export const tasksApi = api;
+export const categoriesApi = api;

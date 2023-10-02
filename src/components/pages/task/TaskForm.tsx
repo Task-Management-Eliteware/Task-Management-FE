@@ -2,15 +2,19 @@
 import React, { FC, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TTaskUpsert, TUpdate, taskSchema, useCreateTask, useUpdateTask } from 'shared';
+import { TTaskUpsert, taskSchema, useCreateTask, useGetCategoriesList, useUpdateTask } from 'shared';
 import { customForm } from 'components/common';
+import { MenuItemType } from 'components/common/models';
 
 type TTaskFormProps = {
-  task: TUpdate | undefined;
+  task: TTaskUpsert | undefined;
+  categoriesOptions: MenuItemType[];
+  onSetUpdateValue: (value: TTaskUpsert) => void;
 };
 
 const TaskForm: FC<TTaskFormProps> = (props) => {
-  const { task } = props;
+  const { task, onSetUpdateValue, categoriesOptions } = props;
+
   const [createTask] = useCreateTask();
   const [updateTask] = useUpdateTask();
 
@@ -20,25 +24,30 @@ const TaskForm: FC<TTaskFormProps> = (props) => {
     resolver: yupResolver(taskSchema),
   });
 
-  const Form = useMemo(() => customForm(formMethods), [task]);
+  const resetFormObj = { taskTitle: '', taskCategoryId: '', _id: '', taskPriorities: undefined };
 
-  const onSubmit: SubmitHandler<TTaskUpsert> = (data) => {
-    if (task) {
-      updateTask({ ...data, _id: task._id })
-        .unwrap()
-        .then((res) => {
-          formMethods.reset({ taskTitle: '', taskCategory: '' });
-        })
-        .catch((err) => console.log(err));
-      return;
+  const Form = useMemo(() => customForm(formMethods), [task, categoriesOptions.length]);
+
+  const onSubmit: SubmitHandler<TTaskUpsert> = async (data) => {
+    try {
+      if (data?._id) {
+        await updateTask(data);
+        formMethods.reset(resetFormObj);
+        return;
+      }
+
+      await createTask(data);
+      formMethods.reset(resetFormObj);
+    } catch (err) {
+      console.log('err:', err);
     }
+  };
 
-    createTask(data)
-      .unwrap()
-      .then((res) => {
-        formMethods.reset({ taskTitle: '', taskCategory: '' });
-      })
-      .catch((err) => console.log(err));
+  const onCancel = () => {
+    if (task) {
+      onSetUpdateValue(resetFormObj);
+    }
+    formMethods.reset(resetFormObj);
   };
 
   return (
@@ -47,9 +56,19 @@ const TaskForm: FC<TTaskFormProps> = (props) => {
         <div className="card-body">
           <Form onSubmit={onSubmit}>
             <Form.Input className="form-control" label="Task Title" name="taskTitle" />
-            <Form.Input className="form-control" label="Task Category" name="taskCategory" />
+            <Form.Dropdown
+              className="form-control"
+              label="Task Category"
+              menuItems={categoriesOptions}
+              sx={{ minWidth: 150 }}
+              variant="outlined"
+              name="taskCategoryId"
+            />
             <button className="btn btn-primary" type="submit">
               Submit
+            </button>
+            <button className="mx-3 btn btn-primary" type="reset" onClick={onCancel}>
+              cancel
             </button>
           </Form>
         </div>

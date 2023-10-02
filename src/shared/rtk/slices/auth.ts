@@ -1,6 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { string } from 'yup';
-import { TLoginReturn } from 'shared/models';
 import { localStorageGetItem } from 'shared/utils';
 
 type TAuth = {

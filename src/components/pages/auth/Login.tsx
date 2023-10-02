@@ -21,8 +21,8 @@ const Login = () => {
       .unwrap()
       .then((res) => {
         const { token } = res.result;
-        localStorageSetItem({ key: 'token', value: token });
         setToken({ token });
+        localStorageSetItem({ key: 'token', value: token });
         navigate(routes.TASKS);
       })
       .catch((err) => console.log(err));

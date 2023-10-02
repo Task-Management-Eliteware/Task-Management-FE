@@ -5,7 +5,8 @@ import { routes } from 'shared/constant';
 import Header from './Header';
 
 export const Layout: FC = () => {
-  const token = useAppSelector((state) => state.authSlice.token);
+  const { token } = useAppSelector((state) => state.authSlice);
+
   if (!token) {
     return <Navigate to={routes.LOGIN} />;
   }
