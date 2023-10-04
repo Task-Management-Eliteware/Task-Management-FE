@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { TApiReturn, TLogin, TLoginReturn } from 'shared/models';
+import { TApiReturn, TLogin, TSignUP, TLoginReturn, TUser } from 'shared/models';
 import { baseApiQuery } from '../interceptor';
 
-type TMutation = TLogin;
 type TReturn = TApiReturn<TLoginReturn>;
+type TUserReturn = TApiReturn<TUser>;
 
 const apiReducerPath = 'auth';
 
@@ -12,7 +12,7 @@ const api = createApi({
   baseQuery: baseApiQuery,
   endpoints: (builder) => {
     return {
-      post: builder.mutation<TReturn, TMutation>({
+      login: builder.mutation<TReturn, TLogin>({
         query: (body) => ({
           method: 'post',
           url: '/login',
@@ -22,10 +22,26 @@ const api = createApi({
           isAuthorizationApi: false,
         },
       }),
+      signup: builder.mutation<void, TSignUP>({
+        query: (body) => ({
+          method: 'post',
+          url: '/signup',
+          body,
+        }),
+        extraOptions: {
+          isAuthorizationApi: false,
+        },
+      }),
+      get: builder.query<TUserReturn, void>({
+        query: () => ({
+          method: 'get',
+          url: '/user',
+        }),
+      }),
     };
   },
 });
 
-export const { usePostMutation: useLogin } = api;
+export const { useLoginMutation: useLogin, useSignupMutation: useSignUp, useGetQuery: useGetUser } = api;
 
 export const authApi = api;

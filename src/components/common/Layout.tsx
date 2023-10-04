@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAppSelector } from 'shared';
 import { routes } from 'shared/constant';
 import Header from './Header';

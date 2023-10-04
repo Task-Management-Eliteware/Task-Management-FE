@@ -4,7 +4,7 @@ import { TCategories } from './categories';
 export type TTask = {
   _id: string;
   taskTitle: string;
-  taskDescription?: string;
+  taskDescription: string;
   taskCategoryId: string;
   taskPriorities: string;
   userId: string;
@@ -20,9 +20,8 @@ export type TTaskList = TTask & { tasksCategory: TCategories };
 export const taskSchema = Yup.object().shape({
   _id: Yup.string(),
   taskTitle: Yup.string().required('Title is required.'),
-  taskCategoryId: Yup.string(),
-  taskDescription: Yup.string(),
-  taskPriorities: Yup.string(),
+  taskCategoryId: Yup.string().required('Category is required.'),
+  taskDescription: Yup.string().required('Title is required.'),
 });
 
 export type TTaskUpsert = Yup.InferType<typeof taskSchema>;

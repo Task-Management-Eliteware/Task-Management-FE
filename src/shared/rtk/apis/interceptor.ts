@@ -1,7 +1,11 @@
+/* eslint-disable valid-typeof */
+
+/* eslint-disable no-prototype-builtins */
+import { toast } from 'react-toastify';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-// import { IS_ENABLE_GLOBAL_LOADER } from 'shared/constant';
 import { BaseApiQueryType, ExtraOptionType } from 'shared/models';
-import { localStorageGetItem } from 'shared/utils';
+import { localStorageGetItem, localStorageRemoveItem } from 'shared/utils';
+import { logout } from '../slices';
 
 // import { setLoading } from '../slices';
 export const pause = (stop: number) =>
@@ -19,13 +23,7 @@ export const baseQuery = (options: ExtraOptionType) => {
     prepareHeaders: (header, { getState }) => {
       const { isAuthorizationApi = true } = options;
       if (!isAuthorizationApi) return header;
-
-      // const {
-      //   authSlice: { accessToken },
-      // } = getState() as any;
-
       const token = localStorageGetItem('token');
-
       header.set('Authorization', `Bearer ${token}`);
       return header;
     },
@@ -35,48 +33,25 @@ export const baseQuery = (options: ExtraOptionType) => {
 export const baseApiQuery: BaseApiQueryType = async (args, api, extraOption = {}) => {
   // const { enableLoading = IS_ENABLE_GLOBAL_LOADER } = extraOption;
   const apiCopy = { ...api };
-  const { dispatch } = apiCopy;
-  // signal.onabort(() => {
+  const { dispatch, signal, abort } = apiCopy;
 
-  // })
   try {
-    // if (enableLoading) dispatch(setLoading(true));
     const query = baseQuery(extraOption);
     const result = await query(args, api, extraOption);
-
-    // if (result.data) {
-    //   // success handler
-    // }
-    // if (result.error) {
-    //   // error handler
-    //   const { data, status } = result.error;
-    //   if (typeof status === 'number') {
-    //     // if (status === 401) { }
-    //     // if (status === 409) { }
-    //     if (status === 404) {
-    //       console.log('404', data);
-    //     }
-
-    //     if (status === 400) {
-    //       //   const {
-    //       //     error: { details },
-    //       //   } = data;
-
-    //       //   if (details.length > 0) {
-    //       //     details.forEach((er) => console.log('api error =>', er.message));
-    //       //   }
-    //       // }
-
-    //       // const isExpectedClientError = status >= 400 && status < 500;
-    //       // if (!isExpectedClientError) console.log('Unexpected Error Occurred!');
-    //       console.error('Bed request');
-    //     }
-    //   }
-    // }
+    if (result.error) {
+      const { error } = result;
+      if (error.status === 401) {
+        localStorageRemoveItem('token');
+        dispatch(logout());
+        toast.error('Your session has expired. please log in again.');
+      } else if (error.status === 500) {
+        toast.error('Please try after sometimes.');
+      }
+    }
     return result;
-  } catch (error: unknown) {
+  } catch (error: any) {
     throw error;
   } finally {
-    // if (enableLoading) dispatch(setLoading(false));
+    //
   }
 };

@@ -1,4 +1,4 @@
-import { ReactNode, FormHTMLAttributes, FormEvent } from 'react';
+import { ReactNode, FormHTMLAttributes, FormEvent, ButtonHTMLAttributes } from 'react';
 import { FieldPath, FieldPathValue, FieldValues, SubmitHandler } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material';
 import { customForm } from 'components/common';
@@ -22,6 +22,8 @@ export type TFormInput<TValue extends FieldValues> = {
 export interface IFromDropDown<TValue extends FieldValues> extends DropdownProps {
   name: TFieldName<TValue>;
 }
+
+export type TFormButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export type TFormReturn<T extends FieldValues> = ReturnType<typeof customForm<T>>;
 export type TCustomFormReturn<T extends FieldValues> = { Form: TFormReturn<T> };

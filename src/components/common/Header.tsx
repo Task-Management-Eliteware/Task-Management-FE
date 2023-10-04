@@ -1,7 +1,8 @@
 import React from 'react';
-import { localStorageRemoveItem, logout, useAppDispatch } from 'shared';
+import { localStorageRemoveItem, logout, useAppDispatch, useGetUser } from 'shared';
 
 const Header = () => {
+  const { data: user } = useGetUser();
   const dispatch = useAppDispatch();
   const logoutHandler = () => {
     localStorageRemoveItem('token');
@@ -18,10 +19,10 @@ const Header = () => {
         <div className="navbar-nav flex-row order-md-last">
           <div className="nav-item">
             <div className="nav-link d-flex lh-1 text-reset p-0">
-              <span className="avatar avatar-sm" />
               <div className="d-none d-xl-block ps-2">
-                <div>Paweł Kuna</div>
-                <div className="mt-1 small text-secondary">UI Designer</div>
+                <div>
+                  {user?.result.firstName} {user?.result.lastName}
+                </div>
               </div>
             </div>
           </div>

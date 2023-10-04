@@ -34,16 +34,16 @@ export type TApiReturn<T> = {
 export type TApiListReturn<T> = {
   result: {
     data: T[];
+    pagination: { page: number; pageSize: number; totalRecords: number };
   };
 };
 
-type TCustomError = {
+export type TCustomError = {
   status: number;
   data: {
     error: {
-      details: TErrorMessage[];
+      message: string;
     };
   };
 };
-export type BaseApiQueryType = BaseQueryFn<string | FetchArgs, unknown, TCustomError, ExtraOptionType>;
-// export type BaseApiQueryTyp1 = BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, ExtraOptionType>;
+export type BaseApiQueryType = BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, ExtraOptionType>;
